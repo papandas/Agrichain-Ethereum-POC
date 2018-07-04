@@ -1,0 +1,43 @@
+<div class="logincontainer sectioncontent">
+    <div class="fullcon tc loginlogo">
+        <img src="images/agrichainicon.png" alt="">
+    </div>
+    <div class="loginform tc fullcon pb0i">
+        <div class="list">
+        <div class="iconinput inputitem">
+            <input id="username" type="text" placeholder="Email" />
+        </div>
+        <div class="iconinput inputitem">
+            <input id="password" type="Password" placeholder="Password" />
+        </div>
+        <div class="fullcon loginbtn btncon ps20 tc p0i">
+            <a class="darkamberbtn btn" onclick="App.LoadHomePage();">LOGIN</a>
+        </div>
+        <div class="keepin">
+            <label class="control control--checkbox">Keep me signed in
+            <input type="checkbox" name="rememberMe" ng-model="rememberMe" value="true" class="ng-valid ng-dirty ng-valid-parse ng-touched ng-not-empty" style="">
+            <div class="control__indicator"></div>
+            </label>
+        </div>
+        <a class="frgtpwd" href="">Forgot Password ?</a>
+        </div>
+    </div>
+    <div class="or fullcon tc">
+        <span>
+        <b>OR</b>
+        </span>
+    </div>
+    <div class="fullcon tc">
+        <div class="socialsign">
+        <label for="">Sign in with</label>
+        <span class="siginopt">
+            <a class="socialicon facebook" href=""><i class="icon ion-social-facebook"></i></a>
+            <a class="socialicon twitter" href=""><i class="icon ion-social-twitter"></i></a>
+            <a class="socialicon googleplus" href=""><i class="icon ion-social-googleplus"></i></a>
+        </span>
+        </div>
+    </div>
+    <div class="fullcon tc Signupoption">
+        Don't have an account?  <a onclick="App.LoadSignUpPage();">Sign Up</a>
+    </div>
+</div>   

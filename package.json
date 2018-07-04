@@ -1,0 +1,31 @@
+{
+  "name": "agrichain-ethereum",
+  "version": "1.0.0",
+  "description": "Agrichain Ethereum POC",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "eslint ./",
+    "build": "webpack",
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ipfs": "ipscend --",
+    "deploy": "ipscend publish"
+  },
+  "author": "Papan Das",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "ipscend": "github:alexstep/ipscend",
+    "lite-server": "^2.3.0",
+    "webpack": "^4.8.1",
+    "webpack-cli": "^2.1.3"
+  },
+  "dependencies": {
+    "ipfs": "^0.29.3"
+  }
+}

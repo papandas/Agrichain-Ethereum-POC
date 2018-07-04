@@ -31,15 +31,25 @@ contract Agrichain {
         string productCost;
     }
 
+    
+
     mapping(address => ParticipantDetail) public participants;
     mapping(uint => Asset) public assets;
     mapping(address => uint[]) public producers;
     mapping(address => uint[]) public distributers;
     mapping(address => uint[]) public consumers;
 
+    address[] public allProducers;
+    address[] public allDistributers;
+    address[] public allConsumers;
+
     string public version = "0.0.1";
     address public owner;
     uint public assetIndex;
+
+    // EVENTS
+
+    event SignUpComplete(address indexed participants);
     
 
     modifier onlyOwner() {
@@ -55,6 +65,16 @@ contract Agrichain {
         require(msg.sender != participants[msg.sender].client);
 
         participants[msg.sender] = ParticipantDetail(msg.sender, _email, _fullname, _cellnumber, _password, _type);
+
+        if(AccountType.DISTRIBUTOR == _type){
+            allDistributers.push(msg.sender);
+        }else if(AccountType.CONSUMER == _type){
+            allConsumers.push(msg.sender);
+        }else {
+            allProducers.push(msg.sender);
+        }
+
+        emit SignUpComplete(msg.sender);
     }
 
     function postAssets(
@@ -84,6 +104,18 @@ contract Agrichain {
         producers[msg.sender].push(assetIndex);
     }
 
+    function getAllProducers() public view returns (address[]){
+        return allProducers;
+    }
+
+    function getAllDistributors() public view returns (address[]){
+        return allDistributers;
+    }
+
+    function getAllConsumers() public view returns (address[]){
+        return allConsumers;
+    }
+
     function getAssetsIndex() public view returns (uint[]){
         if(participants[msg.sender].accountType == AccountType.DISTRIBUTOR){
             return distributers[msg.sender];
@@ -104,6 +136,15 @@ contract Agrichain {
 
         assets[_index].status = AssetStatus.SELLING;
         distributers[_addrDistributor].push(_index);
+    }
+
+    function sellToConsumer(address _addrConsumer, uint _index) public {
+        //require(participants[msg.sender].accountType == AccountType.PRODUCER);
+        require(participants[_addrConsumer].accountType == AccountType.CONSUMER);
+        require(_index <= assetIndex);
+        require(assets[_index].status == AssetStatus.SELLING);
+
+        distributers[_addrConsumer].push(_index);
     }
 
 }

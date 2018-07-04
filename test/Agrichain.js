@@ -16,7 +16,12 @@ contract('Agrichain Ethereum Network', function(accounts){
         return Agrichain.deployed().then(function(instance){
             AgrichainInstance = instance;
             return AgrichainInstance.signup("hum.tum.8765@gmail.com", "Papan Das", "9641443962", "pass", 1, {from:accounts[0]});
-        }).then(()=>{
+        }).then((receipt)=>{
+            
+            assert.equal(receipt.logs.length, 1, "Signup event was triggered");
+            assert.equal(receipt.logs[0].event, "SignUpComplete", "the event type is correct");
+            assert.equal(receipt.logs[0].args.participants, accounts[0], "checking from correct Account");           
+
             return AgrichainInstance.participants(accounts[0]);
         }).then((participantDetail)=>{
             //console.log(participantDetail);
@@ -32,7 +37,11 @@ contract('Agrichain Ethereum Network', function(accounts){
             
             ///////////////////////
             return AgrichainInstance.signup("producer@ac.com", "Producer One", "1111", "pass", 0, {from:accounts[1]});
-        }).then(()=>{
+        }).then((receipt)=>{
+            assert.equal(receipt.logs.length, 1, "Signup event was triggered");
+            assert.equal(receipt.logs[0].event, "SignUpComplete", "the event type is correct");
+            assert.equal(receipt.logs[0].args.participants, accounts[1], "checking from correct Account");
+
             return AgrichainInstance.participants(accounts[1]);
         }).then((participantDetail)=>{
             //console.log(participantDetail);
@@ -48,7 +57,11 @@ contract('Agrichain Ethereum Network', function(accounts){
             assert(error.message.indexOf('revert') >= 0, 'error message must contain revert');
             ////////////////////
             return AgrichainInstance.signup("customer@ac.com", "Customer One", "1111", "pass", 2, {from:accounts[2]});
-        }).then(()=>{
+        }).then((receipt)=>{
+            assert.equal(receipt.logs.length, 1, "Signup event was triggered");
+            assert.equal(receipt.logs[0].event, "SignUpComplete", "the event type is correct");
+            assert.equal(receipt.logs[0].args.participants, accounts[2], "checking from correct Account");
+
             return AgrichainInstance.participants(accounts[2]);
         }).then((participantDetail)=>{
             //console.log(participantDetail);
@@ -66,7 +79,10 @@ contract('Agrichain Ethereum Network', function(accounts){
         }).then((reply)=>{
             // Save a fresh acocunt / Sign up a fresh account.
             return AgrichainInstance.signup("customer2@ac.com", "Customer Two", "1111", "pass", 2, {from:accounts[3]});
-        }).then((participantDetail)=>{
+        }).then((receipt)=>{
+            assert.equal(receipt.logs.length, 1, "Signup event was triggered");
+            assert.equal(receipt.logs[0].event, "SignUpComplete", "the event type is correct");
+            assert.equal(receipt.logs[0].args.participants, accounts[3], "checking from correct Account");
             // Check a fresh copy 
             return AgrichainInstance.participants(accounts[3]);
         }).then((participantDetail)=>{
@@ -77,6 +93,16 @@ contract('Agrichain Ethereum Network', function(accounts){
             assert.equal(participantDetail[3], "1111", 'Cellnumber is correct');
             assert.equal(participantDetail[4], "pass", 'Password is correct');
             assert.equal(participantDetail[5].toNumber(), 2, 'Account Type is correct');
+
+            return AgrichainInstance.getAllProducers();
+        }).then((producers)=>{
+            console.log("Producers: ", producers)
+            return AgrichainInstance.getAllDistributors();
+        }).then((distributors)=>{
+            console.log("Distributors: ", distributors)
+            return AgrichainInstance.getAllConsumers();
+        }).then((consumers)=>{
+            console.log("Consumers: ", consumers)
         })
     })
 

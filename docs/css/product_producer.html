@@ -1,0 +1,212 @@
+<html ng-app="ionicApp">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Side Menus</title>
+    <link href="https://code.ionicframework.com/1.0.0-beta.6/css/ionic.css" rel="stylesheet">
+    <link href="https://code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://code.ionicframework.com/1.0.0-beta.6/js/ionic.bundle.js"></script>
+    <script src="https://unpkg.com/ionicons@4.2.0/dist/ionicons.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  
+	<style type="text/css">
+		#main {
+			margin: 15px auto;
+			background: white;
+			overflow: auto;
+			width: 750px;
+		}
+
+		#header {
+			background: white;
+		}
+
+		#mainbody {
+			background: white;
+			width: 100%;
+		}
+
+		#header ul {
+			margin-bottom: 0;
+			margin-right: 40px;
+		}
+
+		#header li {
+			display: inline;
+			padding-right: 0.5em;
+			padding-left: 0.5em;
+			font-weight: bold;
+			border-right: 1px solid #333333;
+		}
+
+		#header li a {
+			text-decoration: none;
+			color: black;
+		}
+
+		div.button {
+			border: 2px solid #333333;;
+			border-radius: 15px;
+			width: 100px;
+			cursor: pointer;
+			font-weight: bold;
+		}
+	</style>
+  </head>
+ 
+  <body>
+    <div ng-controller="AppController">       
+      <ion-nav-view></ion-nav-view>
+    </div>
+    <script id="app.html" type="text/ng-template">
+      <ion-side-menus>        
+        <ion-side-menu-content>
+          <ion-nav-bar class="bar-positive">
+            <a href="producer-list.html" class="button p0i">
+              <i class="icon icon20 dib mt5">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+                    <path d="M41.6,52.3c0.5-0.5,0.5-1.3,0-1.8L21.1,30L41.6,9.5c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L18.4,29.1
+                    c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"/>
+                </svg>
+              </i>
+            </a>
+            <h1 class="title">Add Produce</h1>
+          </ion-nav-bar>
+          <ion-nav-view class="midscroller" name="appContent"></ion-nav-view>
+        </ion-side-menu-content>         
+        <ion-side-menu side="left">
+          <ion-content>
+            <ion-cart ng-controller='CartController'></ion-cart>
+          </ion-content>
+        </ion-side-menu>
+      </ion-side-menus>
+    </script>
+    <script id="home.html" type="text/ng-template">
+      <ion-view>
+        <ion-content>
+          <ion-purchase class="dispflex">
+            <div class="callwrap fullcon homescreen">
+              <div class="pagemiddle ">
+                <div class="sectioncontent">
+                  <div class="homeoptions">
+                    <div id="main" class="fullcon p15">
+          						<div id="header"></div>
+          						<div id="mainbody">
+          							<p style="font-size: 25px;">Create QR Code</p><br/>
+          							<table border="0" align="center">
+          								<tbody>
+          									<tr>
+          										<td>
+          											<textarea cols="60" rows="3" id="data" placeholder="Enter URL or text"></textarea>
+          										</td>
+          									</tr>
+          									<tr>
+          										<td>
+          											<div class="button" onclick="create()">Create</div>
+          										</td>
+          									</tr>
+          									<tr>
+          										<td>
+          											<div id="qrimage"></div>
+          										</td>
+          									</tr>
+
+          								</tbody>
+          							</table>
+          						</div>
+          					</div>
+                    <div class="fullcon p15 bgwhite">
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Harvest Year</p>
+                        <div class="inputcon"><input name="add" class="form-control prof_right_input" placeholder="Insurance #" type="text"></div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Commodity</p>
+                        <div class="inputcon">
+                          <select name="" id=""  class="form-control prof_right_input">
+                            <option value="">Potato</option>
+                            <option value="">Apples</option>
+                            <option value="">Strawberry</option>
+                            <option value="">Blueb</option>
+                            <option value="">Blueberries</option>
+                            <option value="">Wheat</option>
+                            <option value="">Oat</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Total Acres</p>
+                        <div class="inputcon"><input name="add" class="form-control prof_right_input" placeholder="Total Acres" type="text"></div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Average Yield</p>
+                        <div class="inputcon"><input name="add" class="form-control prof_right_input" placeholder="Average Yield" type="text"></div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Estimated Basis</p>
+                        <div class="inputcon"><input name="add" class="form-control prof_right_input" placeholder="Estimated Basis" type="text"></div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Crop Insurance Coverage</p>
+                        <div class="inputcon"><input name="add" class="form-control prof_right_input" placeholder="Crop Insurance Coverage %" type="text"></div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <p class="dispttl">Productions Costs</p>
+                        <div class="inputcon"><input name="add" class="form-control prof_right_input" placeholder="Productions Costs" type="text"></div>
+                      </div>
+                      <div class="parentinput mv5 fullcon">
+                        <a href="producer-list.html" class="btn fullcon darkamberbtn">Save</a>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-purchase>
+        </ion-content>
+      </ion-view>
+    </script>    
+    
+	<script type="text/javascript">
+		function create() {
+			var data = document.getElementById("data").value;
+			document.getElementById("qrimage").innerHTML = "<img src='https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl="
+					+ encodeURIComponent(data) + "'/>";
+		}
+	</script>
+	
+    <script>
+      angular.module('ionicApp', ['ionic'])
+      .controller('AppController', function($scope, $ionicSideMenuDelegate, $ionicActionSheet, $ionicPopup, $timeout) {
+        
+      })
+      .controller("HomeController", function($scope) {
+      })
+      .controller("CartController", function($scope) {
+        
+      })
+      
+      .config(function($stateProvider, $urlRouterProvider) {
+        $stateProvider
+          .state('app', {
+            url: "/app",
+            abstract: true,
+            templateUrl: "app.html"
+          })
+          .state('app.home', {
+            url: "/home",
+            views: {
+              'appContent' :{
+                templateUrl: "home.html",
+                controller : "HomeController"
+              }
+            }
+          })
+        $urlRouterProvider.otherwise("/app/home");
+      })
+
+    </script>
+  </body>
+</html>

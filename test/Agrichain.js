@@ -96,13 +96,13 @@ contract('Agrichain Ethereum Network', function(accounts){
 
             return AgrichainInstance.getAllProducers();
         }).then((producers)=>{
-            console.log("Producers: ", producers)
+            //console.log("Producers: ", producers)
             return AgrichainInstance.getAllDistributors();
         }).then((distributors)=>{
-            console.log("Distributors: ", distributors)
+            //console.log("Distributors: ", distributors)
             return AgrichainInstance.getAllConsumers();
         }).then((consumers)=>{
-            console.log("Consumers: ", consumers)
+            //console.log("Consumers: ", consumers)
         })
     })
 
@@ -132,14 +132,22 @@ contract('Agrichain Ethereum Network', function(accounts){
             //console.log(assetItem);
             assert.equal(assetItem[1], "2016", 'Harvest Year is correct');
             assert.equal(assetItem[3].toNumber(), 0, 'Status is correct');
-            return AgrichainInstance.sellToDistributor(distributor, assetIndexArray[assetIndexArray.length - 1], {fron:producer});
+            return AgrichainInstance.sellToDistributor(distributor, assetIndexArray[assetIndexArray.length - 1], {from:producer});
         }).then(()=>{
             return AgrichainInstance.assets(assetIndexArray[assetIndexArray.length - 1]);
         }).then((assetItem)=>{
             //console.log(assetItem);
             assert.equal(assetItem[1], "2016", 'Harvest Year is correct');
             assert.equal(assetItem[3].toNumber(), 2, 'Status is correct');
-             
+
+            console.log("Selling" , assetIndexArray[assetIndexArray.length - 1] , "to customer. ")
+            
+            return AgrichainInstance.sellToConsumer(consumerOne, assetIndexArray[assetIndexArray.length - 1], {from:distributor});
+        }).then(()=>{
+            console.log("GEt ... ")
+            return AgrichainInstance.getAssetsIndex({from:consumerOne});
+        }).then((consumerOneItems)=>{
+            console.log("Customer One items: " , consumerOneItems);
         })
 
     });

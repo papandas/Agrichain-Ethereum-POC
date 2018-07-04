@@ -49,7 +49,7 @@ contract Agrichain {
 
     // EVENTS
 
-    event SignUpComplete(address indexed participants);
+    event SignUpComplete(address participants);
     
 
     modifier onlyOwner() {
@@ -129,7 +129,7 @@ contract Agrichain {
     }
 
     function sellToDistributor(address _addrDistributor, uint _index) public {
-        //require(participants[msg.sender].accountType == AccountType.PRODUCER);
+        require(participants[msg.sender].accountType == AccountType.PRODUCER);
         require(participants[_addrDistributor].accountType == AccountType.DISTRIBUTOR);
         require(_index <= assetIndex);
         require(assets[_index].status == AssetStatus.CREATED);
@@ -139,12 +139,12 @@ contract Agrichain {
     }
 
     function sellToConsumer(address _addrConsumer, uint _index) public {
-        //require(participants[msg.sender].accountType == AccountType.PRODUCER);
+        require(participants[msg.sender].accountType == AccountType.DISTRIBUTOR);
         require(participants[_addrConsumer].accountType == AccountType.CONSUMER);
         require(_index <= assetIndex);
         require(assets[_index].status == AssetStatus.SELLING);
 
-        distributers[_addrConsumer].push(_index);
+        consumers[_addrConsumer].push(_index);
     }
 
 }

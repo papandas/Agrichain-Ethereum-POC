@@ -1,41 +1,54 @@
-<div class="bar-positive">
-    <a onclick="App.LoadDefaultHomePage();" class="button p0i">
-        <i class="icon icon20 dib mt5">
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
-                <path d="M41.6,52.3c0.5-0.5,0.5-1.3,0-1.8L21.1,30L41.6,9.5c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L18.4,29.1
-                c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"
-                />
-            </svg>
-        </i>
-    </a>
-    <h1 class="title" id="profileTitle"></h1>
-</div>
+<ion-nav-bar class="bar bar-header nav-bar disable-user-behavior">
+  <button onclick="App.LoadDefaultHomePage();" class="button p0i">
+    <i class="icon icon20">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+        <path d="M41.6,52.3c0.5-0.5,0.5-1.3,0-1.8L21.1,30L41.6,9.5c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L18.4,29.1
+          c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"></path>
+      </svg>
+    </i>
+  </button>
+  <h1 class="title" id="profileTitle"></h1>
+  </div>
+</ion-nav-bar>
 
-<div class="dispflex">
+<div class="maincontainer">
+  <div class="dispflex">
     <div class="callwrap fullcon homescreen">
       <div class="pagemiddle ">
         <div class="sectioncontent">
           <div class="homeoptions">
             <div class="fullcon p15 bgwhite">
-                <a class = "item item-icon-right">
-                    <span><strong>Email: </strong></span>
-                    <span id="email"></span>
-                  </a>
-                  <a class = "item item-icon-right">
-                    <span><strong>Full Name: </strong></span><span id="fullname"></span>
-                  </a>
-                  <a class = "item item-icon-right">
-                    <span><strong>Cell Number: </strong></span><span id="cellnumber"></span>
-                  </a>
-                  <a class = "item item-icon-right">
-                    <span><strong>Account Address: </strong></span><span id="accountId"></span>
-                  </a>
-              
-              
-          </div>
+              <a class="item item-icon-right">
+                <span>
+                  <strong>Email: </strong>
+                </span>
+                <span id="email"></span>
+              </a>
+              <a class="item item-icon-right">
+                <span>
+                  <strong>Full Name: </strong>
+                </span>
+                <span id="fullname"></span>
+              </a>
+              <a class="item item-icon-right">
+                <span>
+                  <strong>Cell Number: </strong>
+                </span>
+                <span id="cellnumber"></span>
+              </a>
+              <a class="item item-icon-right">
+                <span>
+                  <strong>Account Address: </strong>
+                </span>
+                <span id="accountId"></span>
+              </a>
+
+
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </div>

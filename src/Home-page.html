@@ -1,108 +1,99 @@
-<table width="100%" height="10px" style="border-bottom: darkmagenta 1px solid;">
-  <tr>
-    <td>
-      <button onclick="App.LoadLoginPage();" class="button p0i">
-        <i class="icon icon20">
-          <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
-            <path d="M41.6,52.3c0.5-0.5,0.5-1.3,0-1.8L21.1,30L41.6,9.5c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L18.4,29.1
-              c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"
-            />
-          </svg>
-        </i>
-      </button>
-    </td>
-    <td valign="center">
-      <h1 class="title ">
-        <img src="images/agrichain_header_logo.png" alt="">
-      </h1>
-    </td>
-  </tr>
-</table>
-
-<div>
+<ion-nav-bar class="bar bar-header nav-bar disable-user-behavior">
+  <button onclick="App.LoadLoginPage();" class="button p0i">
+    <i class="icon icon20">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+        <path d="M41.6,52.3c0.5-0.5,0.5-1.3,0-1.8L21.1,30L41.6,9.5c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L18.4,29.1
+          c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"></path>
+      </svg>
+    </i>
+  </button>
+  <h1 class="title ">
+    <img src="images/agrichain_header_logo.png" alt="">
+  </h1>
+  </div>
+</ion-nav-bar>
+<div class="maincontainer">
 
 
-</div>
 
-<div class="midscroller"></div>
-
-<div class="dispflex">
-  <div class="callwrap fullcon homescreen">
-    <div class="pagemiddle ">
-      <div class="sectioncontent">
-        <div class="homeoptions">
-          <div class="halficon">
-            <a onclick="App.LoadProducerListPage();" class="gridicon">
-              <i class="fab fa-envira"></i>
-              <span>Produce</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-people-carry"></i>
-              <span>Suppliers</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-university"></i>
-              <span>Financial Lending Institute</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-gavel"></i>
-              <span>Government & Advisories</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a onclick="App.LoadTradeProducerPage();" class="gridicon">
-              <i class="fas fa-coins"></i>
-              <span>Trading/Selling</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fab fa-pagelines"></i>
-              <span>Farming Tips</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-book-open"></i>
-              <span>Knowledge /Advisory</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fab fa-mixcloud"></i>
-              <span>Weather</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-newspaper"></i>
-              <span>News</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon" onclick="App.LoadProfileDetailPage();">
-              <i class="fas fa-user"></i>
-              <span>Profile</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-cog"></i>
-              <span>Settings</span>
-            </a>
-          </div>
-          <div class="halficon">
-            <a class="gridicon">
-              <i class="fas fa-list-alt"></i>
-              <span>Farm Log</span>
-            </a>
+  <div class="dispflex">
+    <div class="callwrap fullcon homescreen">
+      <div class="pagemiddle ">
+        <div class="sectioncontent">
+          <div class="homeoptions">
+            <div class="halficon">
+              <a onclick="App.LoadProducerListPage();" class="gridicon">
+                <i class="fab fa-envira"></i>
+                <span>Produce</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-people-carry"></i>
+                <span>Suppliers</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-university"></i>
+                <span>Financial Lending Institute</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-gavel"></i>
+                <span>Government & Advisories</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a onclick="App.LoadTradeProducerPage();" class="gridicon">
+                <i class="fas fa-coins"></i>
+                <span>Trading/Selling</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fab fa-pagelines"></i>
+                <span>Farming Tips</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-book-open"></i>
+                <span>Knowledge /Advisory</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fab fa-mixcloud"></i>
+                <span>Weather</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon" onclick="App.LoadProfileDetailPage();">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+            </div>
+            <div class="halficon">
+              <a class="gridicon">
+                <i class="fas fa-list-alt"></i>
+                <span>Farm Log</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

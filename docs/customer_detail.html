@@ -1,67 +1,71 @@
-<div class="bar-positive">
-    <a onclick="App.LoadConsumberListPage();" class="button p0i">
-        <i class="icon icon20 dib mt5">
+<ion-nav-bar class="bar bar-header nav-bar disable-user-behavior">
+    <button onclick="App.LoadConsumberListPage();" class="button p0i">
+        <i class="icon icon20">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
                 <path d="M41.6,52.3c0.5-0.5,0.5-1.3,0-1.8L21.1,30L41.6,9.5c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L18.4,29.1
-                c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"
-                />
+            c-0.2,0.2-0.4,0.5-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9l21.4,21.4c0.2,0.2,0.5,0.4,0.9,0.4C41,52.6,41.3,52.5,41.6,52.3z"></path>
             </svg>
         </i>
-    </a>
+    </button>
     <h1 class="title">Produce Detail</h1>
-</div>
+    </div>
+</ion-nav-bar>
 
-<div class="dispflex">
-    <div class="callwrap fullcon homescreen">
-        <div class="pagemiddle ">
-            <div class="sectioncontent">
-                <div class="homeoptions">
-                    <div class="fullcon p15 bgwhite">
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Harvest Year</p>
-                            <div class="inputcon">
-                                <input id="p_harvest" class="form-control prof_right_input" placeholder="Harvest Year #" type="text">
-                            </div>
-                        </div>
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Commodity</p>
-                            <div class="inputcon">
-                                <input id="p_commodity" class="form-control prof_right_input" placeholder="Harvest Year #" type="text">
+<div class="maincontainer">
 
+    <div class="dispflex">
+        <div class="callwrap fullcon homescreen">
+            <div class="pagemiddle ">
+                <div class="sectioncontent">
+                    <div class="homeoptions">
+                        <div class="fullcon p15 bgwhite">
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Harvest Year</p>
+                                <div class="inputcon">
+                                    <input id="p_harvest" class="form-control prof_right_input" placeholder="Harvest Year #" type="text">
+                                </div>
                             </div>
-                        </div>
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Total Acres</p>
-                            <div class="inputcon">
-                                <input id="p_acres" class="form-control prof_right_input" placeholder="Total Acres" type="text">
-                            </div>
-                        </div>
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Average Yield</p>
-                            <div class="inputcon">
-                                <input id="p_yield" class="form-control prof_right_input" placeholder="Average Yield" type="text">
-                            </div>
-                        </div>
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Estimated Basis</p>
-                            <div class="inputcon">
-                                <input id="p_baiss" class="form-control prof_right_input" placeholder="Estimated Basis" type="text">
-                            </div>
-                        </div>
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Crop Insurance Coverage</p>
-                            <div class="inputcon">
-                                <input id="p_insurance" class="form-control prof_right_input" placeholder="Crop Insurance Coverage %" type="text">
-                            </div>
-                        </div>
-                        <div class="parentinput mv5 fullcon">
-                            <p class="dispttl">Productions Costs</p>
-                            <div class="inputcon">
-                                <input id="p_costs" class="form-control prof_right_input" placeholder="Productions Costs" type="text">
-                            </div>
-                        </div>
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Commodity</p>
+                                <div class="inputcon">
+                                    <input id="p_commodity" class="form-control prof_right_input" placeholder="Harvest Year #" type="text">
 
+                                </div>
+                            </div>
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Total Acres</p>
+                                <div class="inputcon">
+                                    <input id="p_acres" class="form-control prof_right_input" placeholder="Total Acres" type="text">
+                                </div>
+                            </div>
+
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Average Yield</p>
+                                <div class="inputcon">
+                                    <input id="p_yield" class="form-control prof_right_input" placeholder="Average Yield" type="text">
+                                </div>
+                            </div>
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Estimated Basis</p>
+                                <div class="inputcon">
+                                    <input id="p_baiss" class="form-control prof_right_input" placeholder="Estimated Basis" type="text">
+                                </div>
+                            </div>
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Crop Insurance Coverage</p>
+                                <div class="inputcon">
+                                    <input id="p_insurance" class="form-control prof_right_input" placeholder="Crop Insurance Coverage %" type="text">
+                                </div>
+                            </div>
+                            <div class="parentinput mv5 fullcon">
+                                <p class="dispttl">Productions Costs</p>
+                                <div class="inputcon">
+                                    <input id="p_costs" class="form-control prof_right_input" placeholder="Productions Costs" type="text">
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>

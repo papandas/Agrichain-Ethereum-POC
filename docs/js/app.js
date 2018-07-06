@@ -189,11 +189,12 @@ App = {
       AgrichainInstance = instance;
       return AgrichainInstance.postAssets(harvers, comodity, acres, _yield, basic, Insurance, costs, parseInt(_yield), { from: App.account, gas: 5000000 })
         .then((reply) => {
+          //console.log(reply);
           $('#content').show();
           $('#loader').hide();
           $('#content').empty();
           $('#content').load('alert-success.html', function () {
-            $('#message').html("<strong>Congraluation,</strong> new assets has been created successfully.");
+            $('#message').html('<strong>Congraluation,</strong> new assets has been successfully created. Your transaction hash <a href="https://rinkeby.etherscan.io/tx/'+reply.tx+'" target="_blank">'+reply.tx+'</a>');
             $('#button').html('<button onclick="App.LoadDefaultHomePage();">Ok</button>');//LoadProducerListPage
           });
         })
@@ -240,6 +241,7 @@ App = {
       $('#email').html(App.profile.email);
       $('#fullname').html(App.profile.fullname);
       $('#cellnumber').html(App.profile.cellnumber);
+      $('#accountId').html('<a href="https://rinkeby.etherscan.io/address/'+App.account+'"  target="_blank">'+App.account+'</a>')
     });
   },
 
@@ -609,7 +611,7 @@ App = {
                   producerObject.commodity = App.GetCommodityName(assetItem[2].toNumber());
                   producerObject.status = assetItem[3].toNumber();
                   producerObject.totalAcer = assetItem[4];
-                  producerObject.averageYield = assetItem[5];
+                  
                   producerObject.estimatedBasic = assetItem[6];
                   producerObject.cropInsuranceCoverage = assetItem[7];
                   producerObject.productCost = assetItem[8];
@@ -618,6 +620,7 @@ App = {
                     return AgrichainInstance.quantitys(arr[idx].toNumber())
                       .then((quantity) => {
                         //console.log(arr[idx].toNumber(), quantity)
+                        producerObject.averageYieldTotal = quantity[0].toNumber();
                         producerObject.averageYield = quantity[1].toNumber();
                         App.productListArray.push(producerObject);
 
@@ -661,6 +664,7 @@ App = {
       $('#p_harvest').val(App.productListArray[param].harvestYear);
       $('#p_commodity').val(App.productListArray[param].commodity);
       $('#p_acres').val(App.productListArray[param].totalAcer);
+      $('#p_yield_total').val(App.productListArray[param].averageYieldTotal);
       $('#p_yield').val(App.productListArray[param].averageYield);
       $('#p_baiss').val(App.productListArray[param].estimatedBasic);
       $('#p_insurance').val(App.productListArray[param].cropInsuranceCoverage);

@@ -2,6 +2,8 @@
 
 /*===============*/
 html.ngdialog-open,body.ngdialog-open{overflow:auto !important}
+html,body{height: 100%;float: left;}
+body{padding-top: 50px !important;}
 .urlAutocompleteContainer{position:relative;color:#666;font-weight:200}
 .urlAutocompleteDropdown{width:100%;cursor:pointer;z-index:9999;position:absolute;margin-top:-10px;background-color:#fff;border-top:1px solid #687099}
 .urlAutocompleteDropdownElement{border-top:0;border-bottom:1px solid #687099;border-left:1px solid #687099;border-right:1px solid #687099;padding:15px 10px}
@@ -2185,7 +2187,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2d0024', end
 .Signupoption a{color: #833980;display: inline-block;margin: 0 8px;text-decoration: none;}
 .toptabs.tabs-striped.tabs-color-light .tab-item.tab-item-active,.toptabs.tabs-striped.tabs-color-light .tab-item.active,.toptabs.tabs-striped.tabs-color-light .tab-item.activated{border-top-width: 0;border-bottom-width: 2px;margin-top: 0;}
 .bar .title + .button:last-child, .bar > .button + .button:last-child, .bar > .button.pull-right, .bar .buttons.pull-right, .bar .title + .buttons{min-width:32px;}
-.bar-positive .button,.tabs-striped.tabs-background-positive .tabs,.bar.bar-positive{background-color: #34032F;border-color: #34032F;}
+/*.bar-positive .button,.tabs-striped.tabs-background-positive .tabs,.bar.bar-positive{background-color: #34032F;border-color: #34032F;}*/
 .bar-positive svg{fill:#fff;}
 .bar-header{box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);}
 h1.title img{max-height:30px;margin-top:7px;}
@@ -2363,7 +2365,7 @@ body .topsubheader{padding-top: 93px;}
 .ftblue{fill:#290A2C !important}
 .famber{fill:#833980 !important}
 .fblue{fill:#438bf4 !important}
-.icon20,.icon20 svg{width: 20px;height: 20px;display: inline-block;}
+.icon20,.icon20 svg{width: 20px;height: 20px;display: inline-block;float: left;}
 .icon30,.icon30 svg{width: 30px;height: 30px;display: inline-block;}
 .button .icon {vertical-align: middle;}
 .statuslist{padding-top: 7px;}
@@ -2450,4 +2452,8 @@ body .topsubheader{padding-top: 93px;}
     fill-opacity: 1;
   }
 }
+table{width: 100%}
+table td,table h1{margin: 0px;vertical-align: middle;}
+#content{width: 100%;}
 
+.maincontainer{height: 100%;width: 100%;float: left;padding: 10px 0;overflow: auto;}

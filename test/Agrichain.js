@@ -4,10 +4,13 @@ var Agrichain = artifacts.require("./Agrichain.sol");
 contract('Agrichain Ethereum Network', function(accounts){
 
     let listArray = '';
-    var producer = accounts[1];
-    var distributor = accounts[0];
-    let consumerOne = accounts[2];
-    let consumerTwo = accounts[3];
+    const producer = "0x2d62771cb1bbb9fc81289276014b76954a57b648";//accounts[1];
+    const producerTwo = accounts[6];
+    const distributor = "0x1f9C6bBa334f5b231B9285fa812052257A20D914";//accounts[0];
+    const distributorTwo = distributor;//accounts[5];
+    const consumerOne = "0xaE0ba611603Ec52104c9aB52deDA584806BBEc14";//accounts[2];
+    const consumerTwo = consumerOne;//accounts[3];
+    const consumerThree = consumerOne;//accounts[4];
 
     //enum AccountType { PRODUCER, DISTRIBUTOR, CONSUMER }
     //enum CommodityType { POTATO, APPLES, STRAWBERRY, BLUEBERRY, BLUEB, WHEAT, OAT }
@@ -94,6 +97,9 @@ contract('Agrichain Ethereum Network', function(accounts){
             assert.equal(participantDetail[4], "pass", 'Password is correct');
             assert.equal(participantDetail[5].toNumber(), 2, 'Account Type is correct');
 
+            return AgrichainInstance.signup("distributor two", "Papan Das", "9641443962", "pass", 1, {from:distributorTwo});
+        }).then(()=>{
+
             return AgrichainInstance.getAllProducers();
         }).then((producers)=>{
             //console.log("Producers: ", producers)
@@ -109,13 +115,14 @@ contract('Agrichain Ethereum Network', function(accounts){
 
     it("Create assets.", function(){
         let assetIndexArray = new Array()
+        let correntAssetIndex = 0;
         return Agrichain.deployed().then(function(instance){
             AgrichainInstance = instance;
-            return AgrichainInstance.postAssets("2018", 0, "100", "999", "9000", "Papan Insurance Coverage", "300000", {from:producer});
+            return AgrichainInstance.postAssets("2018", 0, "100", "999", "9000", "Papan Insurance Coverage", "300000", 1000, {from:producer});
         }).then(()=>{
-            return AgrichainInstance.postAssets("2017", 1, "200", "888", "8000", "Insurance Papan Coverage", "100", {from:producer});
+            return AgrichainInstance.postAssets("2017", 1, "200", "888", "8000", "Insurance Papan Coverage", "100", 2000, {from:producer});
         }).then(()=>{
-            return AgrichainInstance.postAssets("2016", 2, "300", "777", "7000", "Papan Coverage Insurance", "2000", {from:producer});
+            return AgrichainInstance.postAssets("2016", 2, "300", "777", "7000", "Papan Coverage Insurance", "2000", 3000, {from:producer});
         }).then(()=>{
             return AgrichainInstance.getAssetsIndex({from:producer});
         }).then((assetItem)=>{
@@ -126,29 +133,118 @@ contract('Agrichain Ethereum Network', function(accounts){
                 })(each, assetItem)
             }
 
+            for(let each in assetIndexArray){
+                (function(idx, arr){
+                    return AgrichainInstance.assets(arr[idx])
+                    .then((assertItem)=>{
+                        //console.log(arr[idx], assertItem);
+                    });
+                })(each, assetIndexArray)
+            }
+
             return AgrichainInstance.assets(assetIndexArray[assetIndexArray.length - 1]);
             
         }).then((assetItem)=>{
-            //console.log(assetItem);
+            
             assert.equal(assetItem[1], "2016", 'Harvest Year is correct');
             assert.equal(assetItem[3].toNumber(), 0, 'Status is correct');
-            return AgrichainInstance.sellToDistributor(distributor, assetIndexArray[assetIndexArray.length - 1], {from:producer});
+            return AgrichainInstance.sellToDistributor(distributor, assetIndexArray[assetIndexArray.length - 1], 500, {from:producer});
         }).then(()=>{
+            
             return AgrichainInstance.assets(assetIndexArray[assetIndexArray.length - 1]);
         }).then((assetItem)=>{
-            //console.log(assetItem);
+           // check the contract / assert
             assert.equal(assetItem[1], "2016", 'Harvest Year is correct');
             assert.equal(assetItem[3].toNumber(), 2, 'Status is correct');
 
-            console.log("Selling" , assetIndexArray[assetIndexArray.length - 1] , "to customer. ")
+            // Get Quantity
+            return AgrichainInstance.quantitys(assetIndexArray[assetIndexArray.length - 1]);
+
+        }).then((quantitys)=>{
+            //console.log("Qty ", quantitys);
+            // Get Quantity By Address
+            assert.equal(quantitys[0].toNumber(), 3000, 'Total quantity available with assert/contract.');
+            assert.equal(quantitys[1].toNumber(), 2500, 'Total quantity available with producer after selling to distributor.');
+            return AgrichainInstance.getQtyData(distributor, assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantitys)=>{
+            //console.log("Distributor has", quantitys.toNumber(), "Quantity"); 
+            assert.equal(quantitys.toNumber(), 500, 'Total quantity sold to distributor by produver.');
+            //console.log("Selling" , assetIndexArray[assetIndexArray.length - 1] , "to customer 300 units")
             
-            return AgrichainInstance.sellToConsumer(consumerOne, assetIndexArray[assetIndexArray.length - 1], {from:distributor});
+            return AgrichainInstance.sellToConsumer(consumerOne, assetIndexArray[assetIndexArray.length - 1], 300, {from:distributor});
         }).then(()=>{
-            console.log("GEt ... ")
+            //console.log("GEt ... ")
             return AgrichainInstance.getAssetsIndex({from:consumerOne});
         }).then((consumerOneItems)=>{
-            console.log("Customer One items: " , consumerOneItems);
+            console.log("Hit -3")
+            assert.equal(consumerOneItems[0].toNumber(), 3, 'Checking consumber assert Index number.');
+
+            // GEt quantity count
+            return AgrichainInstance.quantitys(assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantity)=>{
+            console.log("Hit -2")
+            assert.equal(quantity[1].toNumber(), 2500, 'Stock available with Producer');
+            return AgrichainInstance.getQtyData(distributor, assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantity)=>{
+            console.log("Hit -1")
+            assert.equal(quantity.toNumber(), 200, 'Stock available with Distributor');
+            return AgrichainInstance.getQtyData(consumerOne, assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantity)=>{
+            assert.equal(quantity.toNumber(), 300, 'Stock available with Consumber.');
+            console.log("Hit 0")
+            // Chcek asset 2 exist
+            return AgrichainInstance.assets(assetIndexArray[assetIndexArray.length - 2]);
+        }).then((assets)=>{
+            //console.log(assets)
+            // Sell assert to Distributor two by producer
+            return AgrichainInstance.sellToDistributor(distributorTwo, assetIndexArray[assetIndexArray.length - 2], 500, {from:producer});
+        }).then(()=>{
+            console.log("Hit 1")
+            // sell to consumer two by distributor two
+            return AgrichainInstance.sellToConsumer(consumerTwo, assetIndexArray[assetIndexArray.length - 2], 250, {from:distributorTwo});
+        }).then(()=>{
+            console.log("Hit 2")
+            // sell to consumer three by distributor one
+            return AgrichainInstance.sellToConsumer(consumerTwo, assetIndexArray[assetIndexArray.length - 1], 150, {from:distributor});
+        }).then(()=>{
+            console.log("Hit 3")
+            return AgrichainInstance.quantitys(assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantity)=>{
+            console.log("Hit 4")
+            assert.equal(quantity[1].toNumber(), 2500, 'Stock available with Producer for assert 1');
+            return AgrichainInstance.quantitys(assetIndexArray[assetIndexArray.length - 2]);
+        }).then((quantity)=>{
+            assert.equal(quantity[1].toNumber(), 1500, 'Stock available with Producer for assert 2');
+            return AgrichainInstance.getQtyData(distributor, assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantity)=>{
+            console.log("Hit 5")
+            assert.equal(quantity.toNumber(), 50, 'Stock available with Distributor One for assert 2');
+            return AgrichainInstance.getQtyData(distributorTwo, assetIndexArray[assetIndexArray.length - 2]);
+        }).then((quantity)=>{
+            console.log("Hit 6")
+            assert.equal(quantity.toNumber(), 250, 'Stock available with Distributor Two');
+            return AgrichainInstance.getQtyData(consumerTwo, assetIndexArray[assetIndexArray.length - 1]);
+        }).then((quantity)=>{
+            console.log("Hit 7")
+            assert.equal(quantity.toNumber(), 150, 'Stock available with Customer Two from Assert 1');
+            return AgrichainInstance.getQtyData(consumerTwo, assetIndexArray[assetIndexArray.length - 2]);
+        }).then((quantity)=>{
+            console.log("Hit 8")
+            assert.equal(quantity.toNumber(), 250, 'Stock available with Customer Two from Assert 2');
+            return AgrichainInstance.getAssetsIndex({from:consumerOne});
+        }).then((index)=>{
+            console.log(index);
+            return AgrichainInstance.getAssetsIndex({from:consumerTwo});
+        }).then((index)=>{
+            console.log(index);
         })
 
     });
 });
+
+/*
+
+.then(()=>{
+            
+        })
+*/

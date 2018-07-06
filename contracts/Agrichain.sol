@@ -31,13 +31,21 @@ contract Agrichain {
         string productCost;
     }
 
+    struct Quantity{
+        uint256 totQty;
+        uint256 avaiQty;
+        mapping(address => uint256) disQty;
+        mapping(address => uint256) conQty;
+    }
+
     
 
     mapping(address => ParticipantDetail) public participants;
-    mapping(uint => Asset) public assets;
-    mapping(address => uint[]) public producers;
-    mapping(address => uint[]) public distributers;
-    mapping(address => uint[]) public consumers;
+    mapping(uint256 => Asset) public assets;
+    mapping(uint256 => Quantity) public quantitys;
+    mapping(address => uint256[]) public producers;
+    mapping(address => uint256[]) public distributers;
+    mapping(address => uint256[]) public consumers;
 
     address[] public allProducers;
     address[] public allDistributers;
@@ -45,7 +53,7 @@ contract Agrichain {
 
     string public version = "0.0.1";
     address public owner;
-    uint public assetIndex;
+    uint256 public assetIndex;
 
     // EVENTS
 
@@ -84,7 +92,8 @@ contract Agrichain {
         string _averageYield, 
         string _estimatedBasic, 
         string _cropInsuranceCoverage, 
-        string _productCost) public {
+        string _productCost,
+        uint256 _qty) public {
 
         // msg.sender is a Producer
         require(participants[msg.sender].accountType == AccountType.PRODUCER);
@@ -101,6 +110,8 @@ contract Agrichain {
             _cropInsuranceCoverage, 
             _productCost);
 
+        quantitys[assetIndex] = Quantity(_qty,_qty);
+
         producers[msg.sender].push(assetIndex);
     }
 
@@ -116,7 +127,15 @@ contract Agrichain {
         return allConsumers;
     }
 
-    function getAssetsIndex() public view returns (uint[]){
+    function getQtyData(address _addr, uint256 _index) public view returns(uint256){
+        if(participants[_addr].accountType == AccountType.DISTRIBUTOR){
+            return quantitys[_index].disQty[_addr];
+        }else if(participants[_addr].accountType == AccountType.CONSUMER){
+            return quantitys[_index].conQty[_addr];
+        }
+    }
+
+    function getAssetsIndex() public view returns (uint256[]){
         if(participants[msg.sender].accountType == AccountType.DISTRIBUTOR){
             return distributers[msg.sender];
         }else if(participants[msg.sender].accountType == AccountType.CONSUMER){
@@ -128,22 +147,26 @@ contract Agrichain {
         }
     }
 
-    function sellToDistributor(address _addrDistributor, uint _index) public {
+    function sellToDistributor(address _addrDistributor, uint256 _index, uint256 _qty) public {
         require(participants[msg.sender].accountType == AccountType.PRODUCER);
         require(participants[_addrDistributor].accountType == AccountType.DISTRIBUTOR);
         require(_index <= assetIndex);
         require(assets[_index].status == AssetStatus.CREATED);
 
         assets[_index].status = AssetStatus.SELLING;
+        quantitys[_index].disQty[_addrDistributor] = _qty;
+        quantitys[_index].avaiQty = quantitys[_index].avaiQty - _qty;
         distributers[_addrDistributor].push(_index);
     }
 
-    function sellToConsumer(address _addrConsumer, uint _index) public {
+    function sellToConsumer(address _addrConsumer, uint256 _index, uint256 _qty) public {
         require(participants[msg.sender].accountType == AccountType.DISTRIBUTOR);
         require(participants[_addrConsumer].accountType == AccountType.CONSUMER);
         require(_index <= assetIndex);
         require(assets[_index].status == AssetStatus.SELLING);
 
+        quantitys[_index].conQty[_addrConsumer] = _qty;
+        quantitys[_index].disQty[msg.sender] = quantitys[_index].disQty[msg.sender] - _qty;
         consumers[_addrConsumer].push(_index);
     }
 

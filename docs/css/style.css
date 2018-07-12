@@ -2457,3 +2457,4 @@ table td,table h1{margin: 0px;vertical-align: middle;}
 #content{width: 100%;}
 
 .maincontainer{height: 100%;width: 100%;float: left;padding: 10px 0;overflow: auto;}
+#message{width: 100%;background: #984389;border-radius:3px;color: #fff;margin-bottom:30px;padding: 15px;}

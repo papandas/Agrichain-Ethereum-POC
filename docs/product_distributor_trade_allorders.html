@@ -1,5 +1,7 @@
+
+
 <ion-nav-bar class="bar bar-header nav-bar disable-user-behavior">
-    <button onclick="App.LoadHomePage();" class="button p0i">
+    <button onclick="App.LoadDistributorHomePage();" class="button p0i">
         <i class="icon icon20">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
@@ -8,12 +10,11 @@
             </svg>
         </i>
     </button>
-    <h1 class="title">Produce Order List</h1>
+    <h1 class="title">Distributor Inventory</h1>
     </div>
 </ion-nav-bar>
 
 <div class="maincontainer">
-
     <div class="dispflex">
         <div class="callwrap fullcon homescreen">
             <div class="pagemiddle ">
@@ -21,7 +22,26 @@
                     <div class="homeoptions">
                         <div class="fullcon p15 bgwhite">
 
-                            <div id="produce_order_list"></div>
+                            <div style="padding-left: 20px;">
+                                <a class="tab_normal" onclick="App.LoadTradeDistributorPage();">Buy Assets</a>
+                                <a class="tab_active" onclick="App.LoadTradeDistributorPageAllOrders();">All Orders</a>
+                            </div>
+
+
+
+                            <div class="rounded_border parentinput">
+                                
+
+                                <div id="produce_order_list"></div>
+
+
+                            </div>
+
+
+
+
+
+
 
                         </div>
                     </div>

@@ -12,6 +12,8 @@
  *   },
  */
 
+
+
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -19,8 +21,7 @@ module.exports = {
     development: {
       host: "127.0.0.1",
       port: 7545,
-      network_id: "*",
-      gas: 90000000, gasPrice: web3.toWei(10000000, 'gwei'),
+      network_id: "*"
     },
     rinkeby: {
       host:"localhost",

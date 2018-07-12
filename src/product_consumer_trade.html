@@ -1,50 +1,7 @@
-<style type="text/css">
-    #main {
-        margin: 15px auto;
-        background: white;
-        overflow: auto;
-        width: 750px;
-    }
 
-    #header {
-        background: white;
-    }
-
-    #mainbody {
-        background: white;
-        width: 100%;
-    }
-
-    #header ul {
-        margin-bottom: 0;
-        margin-right: 40px;
-    }
-
-    #header li {
-        display: inline;
-        padding-right: 0.5em;
-        padding-left: 0.5em;
-        font-weight: bold;
-        border-right: 1px solid #333333;
-    }
-
-    #header li a {
-        text-decoration: none;
-        color: black;
-    }
-
-    div.button {
-        border: 2px solid #333333;
-        ;
-        border-radius: 15px;
-        width: 100px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-</style>
 
 <ion-nav-bar class="bar bar-header nav-bar disable-user-behavior">
-    <button onclick="App.LoadDistributorHomePage();" class="button p0i">
+    <button onclick="App.LoadDefaultHomePage();" class="button p0i">
         <i class="icon icon20">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
@@ -53,7 +10,7 @@
             </svg>
         </i>
     </button>
-    <h1 class="title">Distributor Inventory</h1>
+    <h1 class="title">Consumer Inventory</h1>
     </div>
 </ion-nav-bar>
 
@@ -65,16 +22,13 @@
                     <div class="homeoptions">
                         <div class="fullcon p15 bgwhite">
 
-                            <div style="padding-left: 20px;">
-                                <a class="tab_active" onclick="App.LoadTradeDistributorPage();">Buy Assets</a>
-                                <a class="tab_normal" onclick="App.LoadTradeDistributorPageAllOrders();">My Orders</a>
-                            </div>
+                            
 
 
 
-                            <div class="rounded_border parentinput">
+                           
                                 <div class="parentinput mv5 fullcon">
-                                    <p class="dispttl">Select a Producer</p>
+                                    <p class="dispttl">Select a Distributor</p>
                                     <div id="s_distributor" class="inputcon">
                                         <select class="form-control prof_right_input"></select>
                                     </div>
@@ -95,11 +49,11 @@
                                 </div>
 
                                 <div class="parentinput mv5 fullcon">
-                                    <a onclick="App.CreateOrderRequest();" class="btn fullcon darkamberbtn">Place Order Request</a>
+                                    <a onclick="App.ConsumerBuyRequest();" class="btn fullcon darkamberbtn">Buy it now!</a>
                                 </div>
 
 
-                            </div>
+                           
 
 
 

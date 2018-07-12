@@ -53,7 +53,7 @@
             </svg>
         </i>
     </button>
-    <h1 class="title">Sell Inventory</h1>
+    <h1 class="title">Distributor Inventory</h1>
     </div>
 </ion-nav-bar>
 
@@ -65,30 +65,47 @@
                     <div class="homeoptions">
                         <div class="fullcon p15 bgwhite">
 
-                            <div class="parentinput mv5 fullcon">
-                                <p class="dispttl">Sell to</p>
-                                <div id="s_distributor" class="inputcon">
+                            <div style="padding-left: 20px;">
+                                <a class="tab_active" onclick="App.LoadTradeDistributorPage();">Buy Assets</a>
+                                <a class="tab_normal" onclick="App.LoadTradeDistributorPageAllOrders();">My Orders</a>
+                            </div>
 
+
+
+                            <div class="rounded_border parentinput">
+                                <div class="parentinput mv5 fullcon">
+                                    <p class="dispttl">Select a Producer</p>
+                                    <div id="s_distributor" class="inputcon">
+                                        <select class="form-control prof_right_input"></select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="parentinput mv5 fullcon">
-                                <p class="dispttl">Commodity</p>
-                                <div id="s_product_list" class="inputcon">
-
+                                <div class="parentinput mv5 fullcon">
+                                    <p class="dispttl">Assets List</p>
+                                    <div id="s_product_list" class="inputcon">
+                                        <select class="form-control prof_right_input"></select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="parentinput mv5 fullcon">
-                                <p class="dispttl">Quantity</p>
-                                <div class="inputcon">
-                                    <input id="s_quantity" class="form-control prof_right_input" placeholder="Quantity" type="text">
+                                <div class="parentinput mv5 fullcon">
+                                    <p class="dispttl">Quantity</p>
+                                    <div class="inputcon">
+                                        <input id="s_quantity" class="form-control prof_right_input" placeholder="Quantity" type="text">
+                                    </div>
                                 </div>
+
+                                <div class="parentinput mv5 fullcon">
+                                    <a onclick="App.CreateOrderRequest();" class="btn fullcon darkamberbtn">Place Order Request</a>
+                                </div>
+
+
                             </div>
 
-                            <div class="parentinput mv5 fullcon">
-                                <a onclick="App.SellDistributorToCustomer();" class="btn fullcon darkamberbtn">Sell</a>
-                            </div>
+
+
+
+
+
 
                         </div>
                     </div>

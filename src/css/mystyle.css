@@ -1,0 +1,42 @@
+.button_normal {
+    background-color: #833980; 
+    border: none; 
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px;
+}
+
+.tab_normal{
+    background-color: #833980; 
+    border: none; 
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px;
+}
+
+.tab_active{
+    background-color: #c027bb; 
+    border: none; 
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px;
+}
+
+.rounded_border {
+    position: relative;
+    border-radius: 25px;
+    border: 2px solid #833980;
+    padding: 20px; 
+    width: 100%;
+    height: 100%; 
+    overflow-x: auto;
+}

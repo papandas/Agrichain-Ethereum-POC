@@ -239,12 +239,17 @@ App = {
       $('#fullname').html(App.profile.fullname);
       $('#cellnumber').html(App.profile.cellnumber);
       $('#accountId').html('<a href="https://rinkeby.etherscan.io/address/' + App.account + '"  target="_blank">' + App.account + '</a>')
-      
+
       web3.eth.getBalance(App.account, (err, bal) => {
         if (err === null) {
           $('#accountBalance').html(web3.fromWei(bal, 'ether') + ' ETH');
         }
       });
+
+      var qrcode = new QRCode("qrcode", { width: 128, height: 128, correctLevel: QRCode.CorrectLevel.H });
+      qrcode.clear();
+      qrcode.makeCode(App.account);
+
     });
   },
 
@@ -289,12 +294,12 @@ App = {
 
       App.LoadAllAssetsByAccType(App.account);
 
-      setTimeout(function(){
+      setTimeout(function () {
         //console.log("App.productListArray " , App.productListArray.length)
         $('#content').show();
         $('#loader').hide();
 
-        for(let each in App.productListArray){
+        for (let each in App.productListArray) {
           (function (idx, arr) {
             let str = '<div class="item item-icon-right">&nbsp;&nbsp;'
             str += '<a onclick="App.LoadCustomerDetailPage(' + parseInt(idx) + ');" class="year">' + arr[idx].harvestYear + '</a>&nbsp;&nbsp;';
@@ -305,14 +310,14 @@ App = {
 
           })(each, App.productListArray);
         }
-      },3000)
+      }, 3000)
 
     });
   },
 
 
   ConsumerBuyRequest: function () {
-    
+
 
     const addr = $('#distri_produ_list').find(':selected').val();
     const assetId = $('#distri_produ_list_item').find(':selected').val();
@@ -348,10 +353,10 @@ App = {
     }).then((assetIndex) => {
 
       let isExist = false;
-      
+
       for (let each in assetIndex) {
         (function (idx, arr) {
-          //console.log(bool(arr[idx].toNumber() == parseInt(assetId)), "<-" );
+          //console.log(arr[idx].toNumber(), parseInt(assetId), "<-");
           if (arr[idx].toNumber() == parseInt(assetId)) {
             isExist = true;
           }
@@ -370,40 +375,40 @@ App = {
         //console.log("Load message, already exist")
       } else {
         return AgrichainInstance.getQtyData(addr, assetId)
+          .then((disQuantity) => {
+            //console.log("Available Quantity:", disQuantity.toNumber())
+            if (disQuantity.toNumber() > 0) {
+              const setPrice = parseFloat(_sellPrice);
+              const grandTotla = parseFloat(setPrice * quantity);
+
+              let price = web3.toWei(String(grandTotla), 'ether');
+
+              //console.log("TX-Det: Asset Id:", assetId, "Setprice:", setPrice, "Quantity:", quantity, "GrandTotal:", grandTotla, "Price:", price);
+
+              /*return "grood";*/
+
+            return AgrichainInstance.ConsumerPurchase(addr, assetId, quantity, { from: App.account, value: price })
+              .then((receipt) => {
+                $('#content').show();
+                $('#loader').hide();
+                $('#content').empty();
+                $('#content').load('alert-success.html', function () {
+                  $('#message').html("Transactoin Successful! " + quantity + " Kg of " + _assetName + " bought from " + addr + " at " + _sellPrice + " ETH. Your transaction hash is " + receipt.tx);
+                  $('#button').html('<a class="button_normal" onclick="App.LoadDefaultHomePage();">Ok</a>');//LoadProducerListPage
+                });
+              })
+            } else {
+              $('#loader').hide();
+              $('#content').show();
+              $('#content').empty();
+              $('#content').load('alert-success.html', function () {
+                $('#message').html('Stock not available.');
+                $('#button').html('<a class="button_normal" onclick="App.LoadTradeConsumerPage();">Ok</a>');
+              });
+            }
+          })
       }
 
-    }).then((assetQuantity) => {
-      //console.log("Available Quantity:" , assetQuantity)
-      if (assetQuantity.toNumber() > 0) {
-        const setPrice = parseFloat(_sellPrice);
-        const grandTotla = parseFloat(setPrice * quantity);
-
-        console.log("TX-Det:", setPrice , quantity, grandTotla);
-        //console.log(grandTotla, quantity)
-
-         //return "grood";web3.toWei(String(order[6].toNumber()), 'ether');//
-
-        return AgrichainInstance.ConsumerPurchase(addr, assetId, quantity, { from: App.account , value: web3.toWei(String(grandTotla), 'ether')})
-      }else{
-        $('#loader').hide();
-        $('#content').show();
-        $('#content').empty();
-        $('#content').load('alert-success.html', function () {
-          $('#message').html('Stock not available.');
-          $('#button').html('<a class="button_normal" onclick="App.LoadTradeConsumerPage();">Ok</a>');
-        });
-      }
-
-
-
-    }).then((receipt) => {
-      $('#content').show();
-      $('#loader').hide();
-      $('#content').empty();
-      $('#content').load('alert-success.html', function () {
-        $('#message').html("Transactoin Successful! " + quantity + " Kg of " + _assetName + " bought from " + addr + " at " + _sellPrice + " ETH. Your transaction hash is " + receipt.tx);
-        $('#button').html('<a class="button_normal" onclick="App.LoadDefaultHomePage();">Ok</a>');//LoadProducerListPage
-      });
     }).catch((error) => {
       //console.log(error.message);
       $('#loader').hide();
@@ -580,7 +585,7 @@ App = {
 
   DistributorProcessPayment: function (orderid) {
     let _quantity = '';
-    let _price = '';
+    let _price = 0;
     let _assetName = '';
 
     $('#content').hide();
@@ -593,6 +598,7 @@ App = {
         if (arr[idx].index == orderid) {
           _assetName = String(arr[idx].harvestYear + ' - ' + arr[idx].commodity);
           _proname = String(arr[idx].proEmail);
+          _price = parseFloat(arr[idx].sellPrice) * arr[idx].qty;
         }
       })(each, App.orderListArray)
     }
@@ -602,10 +608,10 @@ App = {
       return AgrichainInstance.orders(orderid);
     }).then((order) => {
       _quantity = order[5].toNumber();
-      _price = order[6].toNumber();
-      let priceInWei = web3.toWei(String(order[6].toNumber()), 'ether');
+      //_price = order[6].toNumber();
+      let priceInWei = web3.toWei(String(_price), 'ether');
 
-      //console.log(order[2], "i: ", order[0].toNumber(), "p: " + order[6].toNumber(), _price);
+      //console.log(order[2], "i: ", order[0].toNumber(), "p: " + order[6].toNumber(), _price, priceInWei);
       //return "good";
       return AgrichainInstance.DistributorPurchase(String(order[2]), order[0].toNumber(), { from: App.account, value: priceInWei });
     }).then((receipt) => {
@@ -619,7 +625,7 @@ App = {
         $('#button').html('<a class="button_normal" onclick="App.LoadDefaultHomePage();">Ok</a>');
       });
     }).catch((error) => {
-      console.log(error.message);
+      //console.log(error.message);
       $('#loader').hide();
       $('#content').show();
       $('#content').empty();
@@ -637,58 +643,76 @@ App = {
     $('#loader').show();
     $('#content').empty();
     $('#content').load('product_distributor_trade_allorders.html', function () {
+
+      //console.log("Show all order page");
       App.LoadCompleteOrderList();
+
+
       setTimeout(function () {
+        console.log("Order List: ", App.orderListArray.length);
         $('#content').show();
         $('#loader').hide();
         $('#produce_order_list').empty();
         //$('#produce_order_list').html(str);
+
+        if (!App.orderListArray.length) {
+          $('#produce_order_list').empty();
+          //$('#content').load('alert-success.html', function () {
+          $('#produce_order_list').append('Order list empty. Please try again.');
+          //$('#message').html('Order list empty. Please try again.');
+          //$('#button').html('<a class="button_normal" onclick="App.LoadTradeDistributorPage();">Ok</a>');
+          //});
+        }
+
         for (let each in App.orderListArray) {
           (function (idx, arr) {
+            //console.log(idx, arr[idx]);
+            //console.log(idx, arr[idx].distributor, App.account);
+            if (arr[idx].distributor == App.account) {
 
-            if (arr[idx].distributor == App.account && arr[idx].state != 2) {
-              let str = '<div class="rounded_border" style="margin-bottom:10px;">';
-              str += '<table width="100%" border="0">';
-              str += '<tr>';
-              str += '<td rowspan="2">';
-              //str += '<p>Created:'+date.toDateString()+'</p>';
+              let str = '<div class="item item-icon-right">&nbsp;&nbsp;'
+              str += '<a class="year">' + arr[idx].harvestYear + '</a>&nbsp;&nbsp;';
+              str += '<a class="product">' + arr[idx].commodity + '</a>&nbsp;&nbsp;';
+              str += '<a class="yield">' + arr[idx].qty + '</a>KG&nbsp;@&nbsp;';
+              str += '<a class="yield">' + arr[idx].sellPrice + ' Eth</a>&nbsp;&nbsp;From:&nbsp;';
+              str += '<a class="yield">' + arr[idx].proEmail + '</a>&nbsp;&nbsp;';
+              str += '<a class="yield" ';
               switch (arr[idx].repState) {
                 case 0:
-                  str += '<p style="color:gray;">Current Status: Pending</p>';
+                  str += 'style="color:gray;font-style: italic;">Current Status: Pending';
                   break;
                 case 1:
-                  str += '<p style="color:green;">Current Status: Accepted</p>';
+                  str += 'style="color:green;font-style: italic;">Current Status: Accepted';
                   break;
                 case 2:
-                  str += '<p style="color:red;">Current Status: Rejected</p>';
+                  str += 'style="color:red;font-style: italic;">Current Status: Rejected';
+                  break;
+                case 3:
+                  str += 'style="color:purple;font-style: italic;">Current Status: Received';
+                  break;
+                default:
+                  str += '>';
                   break;
               }
-              let assetname = String(arr[idx].harvestYear + ' - ' + arr[idx].commodity);
-              str += '<p>Asset: ' + assetname + '</p>';
-              str += '<p>Quantity: ' + arr[idx].qty + '</p>';
-              str += '<p>Total Price: ' + arr[idx].price + ' Eth</p>';
-              str += '<p>Producer: ' + arr[idx].proEmail + ' ( ' + arr[idx].proName + ' ) </p>';
-              str += '</td>';
-              str += '<td width="100">';
+              str += '</a>&nbsp;&nbsp;';
+
               if (arr[idx].repState == 1) {
-                str += '<a class="button_normal" onclick="App.DistributorProcessPayment(' + arr[idx].index + ');">Received</a>';
+                str += '<a class="yield button_normal" onclick="App.DistributorProcessPayment(' + arr[idx].index + ');">Received</a>&nbsp;&nbsp;';
               } else {
                 str += '&nbsp;'
               }
-              str += '</td>';
-              str += '</tr>';
-              str += '<tr>';
-              str += '<td>&nbsp;</td>';
-              str += '</tr>';
-              str += '</table>';
-              str += '</div>';
+
+              str += '</div>'
+
               $('#produce_order_list').append(str);
+
+
             }
 
           })(each, App.orderListArray);
 
         }
-      }, 3000)
+      }, 5000)
     })
   },
 
@@ -773,7 +797,7 @@ App = {
                   return AgrichainInstance.quantitys(arr[idx].toNumber())
                     .then((quantity) => {
                       if (quantity[1].toNumber() > 0) {
-                        str += '<option value="' + assets[0].toNumber() + '">' + assets[2] + ' - ' + App.GetCommodityName(assets[3].toNumber()) + ' - (' + quantity[1].toNumber() + ')</option>';
+                        str += '<option value="' + assets[0].toNumber() + '">' + assets[2] + ' - ' + App.GetCommodityName(assets[3].toNumber()) + ' - (' + quantity[1].toNumber() + ' @ ' + quantity[2] + ')</option>';
                       }
 
                       if (length - 1 == idx) {
@@ -821,7 +845,7 @@ App = {
     }).then((assetItems) => {
       for (let each in assetItems) {
         (function (idx, arr) {
-          console.log("Load-Assets::AssetFound", arr[idx].toNumber());
+          //console.log("Load-Assets::AssetFound", arr[idx].toNumber());
           AgrichainInstance.assets(arr[idx].toNumber())
             .then((assetItem) => {
               let producerObject = new Object();
@@ -880,7 +904,9 @@ App = {
             let str = '<div class="item item-icon-right">&nbsp;&nbsp;'
             str += '<a onclick="App.LoadDistributorDetailPage(' + parseInt(idx) + ');" class="year">' + arr[idx].harvestYear + '</a>&nbsp;&nbsp;';
             str += '<a onclick="App.LoadDistributorDetailPage(' + parseInt(idx) + ');" class="product">' + arr[idx].commodity + '</a>&nbsp;&nbsp;';
-            str += '<a onclick="App.LoadDistributorDetailPage(' + parseInt(idx) + ');" class="yield">' + arr[idx].Qty + '</a>&nbsp;&nbsp;';
+            str += '<a onclick="App.LoadDistributorDetailPage(' + parseInt(idx) + ');" class="yield">' + arr[idx].Qty + '</a>Kg&nbsp;&nbsp;';
+            str += '<a onclick="App.LoadDistributorDetailPage(' + parseInt(idx) + ');" class="yield">' + arr[idx].sellPrice + 'Eth</a>&nbsp;&nbsp;';
+
             str += '</div>'
             $('#DistributorProductLists').append(str);
 
@@ -953,7 +979,8 @@ App = {
                       str += '<div class="item item-icon-right">&nbsp;&nbsp;'
                       str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="year">' + assetItem[2] + '</a>&nbsp;&nbsp;';
                       str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="product">' + App.GetCommodityName(assetItem[3].toNumber()) + '</a>&nbsp;&nbsp;';
-                      str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="yield">' + quantity[1].toNumber() + '</a>&nbsp;&nbsp;';
+                      str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="yield">' + quantity[1].toNumber() + '/' + quantity[0].toNumber() + '</a>&nbsp;&nbsp;';
+                      str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="yield">@' + quantity[2] + 'ETH</a>&nbsp;&nbsp;';
                       str += '</div>'
 
 
@@ -1020,14 +1047,15 @@ App = {
       return AgrichainInstance.orderIndex();
     }).then((_totalOrders) => {
       totalOrders = _totalOrders.toNumber();
-      //console.log("Total Orders", totalOrders);
+      console.log("Total Orders Count:", totalOrders);
+
 
       for (let i = 0; i < totalOrders; i++) {
-
+        //console.log(i);
         AgrichainInstance.orders(parseInt(i + 1))
           .then((order) => {
             //console.log(order)
-
+            //console.log("==================================");
             let obj = {};
             obj.index = order[0].toNumber();
             obj.created = order[1].toNumber();
@@ -1052,12 +1080,26 @@ App = {
                   obj.disEmail = distributor[1];
                   obj.disName = distributor[2];
 
-                  App.orderListArray.push(obj)
+                  AgrichainInstance.quantitys(order[4].toNumber()).then((quantity) => {
+                    obj.sellPrice = quantity[2];
+                    App.orderListArray.push(obj);
+
+                    //console.log(obj.index, i, App.orderListArray.length);
+
+                  }).catch((error) => {
+                    console.log("Error loading asset quantity.", error.message);
+                  })
+                }).catch((error) => {
+                  console.log("Error loading participant details.", error.message);
                 });
+              }).catch((error) => {
+                console.log("Error loading participant details.", error.message);
               });
+            }).catch((error) => {
+              console.log("Error loading asset details.", error.message);
             })
-
-
+          }).catch((error) => {
+            console.log("Error loading order details.", error.message);
           })
       }
 
@@ -1096,42 +1138,74 @@ App = {
 
       App.LoadCompleteOrderList();
       setTimeout(function () {
+        console.log("Order List: ", App.orderListArray.length);
         //producer@company.com
         $('#content').show();
         $('#loader').hide();
         $('#produce_order_list').empty();
+
+        if (!App.orderListArray.length) {
+          $('#produce_order_list').empty();
+          //$('#content').load('alert-success.html', function () {
+          $('#produce_order_list').append('Order list empty. Please try again.');
+          //$('#message').html('Order list empty. Please try again.');
+          //$('#button').html('<a class="button_normal" onclick="App.LoadTradeDistributorPage();">Ok</a>');
+          //});
+        }
         //$('#produce_order_list').html(str);
         for (let each in App.orderListArray) {
           (function (idx, arr) {
             //console.log(arr[idx])
             //let date = new Date(arr[idx].created)
-            if (arr[idx].producer == App.account && arr[idx].state === 0 && arr[idx].repState === 0) {
-              let str = '<div class="rounded_border" style="margin-bottom:10px;">';
-              str += '<table width="100%" border="0">';
-              str += '<tr>';
-              str += '<td rowspan="2">';
-              //str += '<p>Created:'+date.toDateString()+'</p>';
-              str += '<p>Asset: ' + arr[idx].harvestYear + ' - ' + arr[idx].commodity + '</p>';
-              str += '<p>Quantity: ' + arr[idx].qty + '</p>';
-              str += '<p>Total Price: ' + arr[idx].price + ' Eth</p>';
-              str += '<p>Order Placed By: ' + arr[idx].disEmail + ' ( ' + arr[idx].disName + ' ) </p>';
-              str += '</td>';
-              str += '<td width="100">';
-              str += '<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 1);">Accept</a>';
-              str += '</td>';
-              str += '</tr>';
-              str += '<tr>';
-              str += '<td><a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 2);">Reject&nbsp;</a></td>';
-              str += '</tr>';
-              str += '</table>';
-              str += '</div>';
+            if (arr[idx].producer == App.account) {
+
+              let str = '<div class="item item-icon-right">&nbsp;&nbsp;'
+              str += '<a class="year">' + arr[idx].harvestYear + '</a>&nbsp;&nbsp;';
+              str += '<a class="product">' + arr[idx].commodity + '</a>&nbsp;&nbsp;';
+              str += '<a class="yield">' + arr[idx].qty + '</a>KG&nbsp;@&nbsp;';
+              str += '<a class="yield">' + arr[idx].sellPrice + ' Eth</a>&nbsp;&nbsp;To:&nbsp;';
+              str += '<a class="yield">' + arr[idx].disEmail + '</a>&nbsp;&nbsp;';
+              //str += '<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 1);">Accept</a>&nbsp;&nbsp;<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 2);">Reject</a>';
+              switch (arr[idx].repState) {
+                case 0:
+                  str += '<label>Delivery Date:</label><input type="date"/><a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 1);">Accept</a>&nbsp;&nbsp;<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 2);">Reject</a>';
+                  break;
+                case 1:
+                  str += '<a class="yield" style="color:green;font-style: italic;">Current Status: Accepted</a>&nbsp;&nbsp;';
+                  break;
+                case 2:
+                  str += '<a class="yield" style="color:red;font-style: italic;">Current Status: Rejected</a>&nbsp;&nbsp;';
+                  break;
+                case 3:
+                  str += '<a class="yield" style="color:purple;font-style: italic;">Current Status: Delivered</a>&nbsp;&nbsp;';
+                  break;
+                default:
+                  str += '<a class="yield" >&nbsp;</a>&nbsp;';
+                  break;
+              }
+
+
+              /*if (arr[idx].repState == 1) {
+                str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="yield button_normal" onclick="App.DistributorProcessPayment(' + arr[idx].index + ');">Received</a>&nbsp;&nbsp;';
+              } else {
+                str += '&nbsp;'
+              }*/
+
+              str += '</div>'
+
+              //let str = '<div class="item item-icon-right">&nbsp;&nbsp;' + arr[idx].harvestYear + ' - ' + arr[idx].commodity ;
+              //str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="year">' + assetItem[2] + '</a>&nbsp;&nbsp;';
+              //str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="product">' + App.GetCommodityName(assetItem[3].toNumber()) + '</a>&nbsp;&nbsp;';
+              //str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="yield">' + quantity[1].toNumber() + '</a>&nbsp;&nbsp;';
+              //str += '</div>'
               $('#produce_order_list').append(str);
+
             }
 
           })(each, App.orderListArray)
         }
 
-      }, 3000);
+      }, 5000);
 
 
 

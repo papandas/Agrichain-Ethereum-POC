@@ -68,21 +68,6 @@ App = {
 
     App.LoadLoginPage();
 
-    /*switch (App.currentState) {
-      case "0":
-        App.LoadLoginPage();
-        break;
-
-      case "1":
-        App.LoadHomePage();
-        break;
-
-      default:
-        App.LoadLoginPage();
-        break;
-
-    }*/
-
     content.show();
     loader.hide();
 
@@ -115,12 +100,21 @@ App = {
         App.LoadDefaultHomePage();
 
       } else {
-        App.LoadLoginPage();
+        $('#alert').html('<div class="alert">Wrong credential!</div>');
+        setTimeout(function () { App.LoadLoginPage(); }, 2000);
       }
 
       $('#content').show();
       $('#loader').hide();
 
+    }).catch((error) => {
+      $('#content').show();
+      $('#loader').hide();
+      $('#content').empty();
+      $('#content').load('alert-success.html', function () {
+        $('#message').html('Connection problem! Ethereum network not connected. Kindly check if MetaMask is loged in & Rinkeby Test network is selected. Kindly Try again. ' + error.message);
+        $('#button').html('<a class="button_normal" onclick="App.LoadLoginPage();">Ok</a>');//LoadProducerListPage
+      });
     })
   },
 
@@ -145,7 +139,11 @@ App = {
       return AgrichainInstance.participants(App.account);
     }).then((participants) => {
       if (participants[0] == App.account) {
+        loader.hide();
+        content.show();
+        $('#alert').html('<div class="alert">Account already registraed as ' + participants[1] + '</div>');
         console.log("*** User already exit with the Smart-Contract ***");
+        setTimeout(function () { App.LoadLoginPage(); }, 3000);
         //, participants[5].toNumber();
       } else {
         return AgrichainInstance.signup(email, fullname, cell, password, type, {
@@ -208,12 +206,16 @@ App = {
 
   LoadLoginPage: function () {
     $('#content').empty();
-    $('#content').load('login.html');
+    $('#content').load('login.html', function () {
+      $('#alert').empty();
+    });
   },
 
   LoadSignUpPage: function () {
     $('#content').empty();
-    $('#content').load('register.html');
+    $('#content').load('register.html', function () {
+      $('#alert').empty();
+    });
   },
 
   LoadHomePage: function () {
@@ -387,16 +389,16 @@ App = {
 
               /*return "grood";*/
 
-            return AgrichainInstance.ConsumerPurchase(addr, assetId, quantity, { from: App.account, value: price })
-              .then((receipt) => {
-                $('#content').show();
-                $('#loader').hide();
-                $('#content').empty();
-                $('#content').load('alert-success.html', function () {
-                  $('#message').html("Transactoin Successful! " + quantity + " Kg of " + _assetName + " bought from " + addr + " at " + _sellPrice + " ETH. Your transaction hash is " + receipt.tx);
-                  $('#button').html('<a class="button_normal" onclick="App.LoadDefaultHomePage();">Ok</a>');//LoadProducerListPage
-                });
-              })
+              return AgrichainInstance.ConsumerPurchase(addr, assetId, quantity, { from: App.account, value: price })
+                .then((receipt) => {
+                  $('#content').show();
+                  $('#loader').hide();
+                  $('#content').empty();
+                  $('#content').load('alert-success.html', function () {
+                    $('#message').html("Transactoin Successful! " + quantity + " Kg of " + _assetName + " bought from " + addr + " at " + _sellPrice + " ETH. Your transaction hash is " + receipt.tx);
+                    $('#button').html('<a class="button_normal" onclick="App.LoadDefaultHomePage();">Ok</a>');//LoadProducerListPage
+                  });
+                })
             } else {
               $('#loader').hide();
               $('#content').show();
@@ -1165,10 +1167,32 @@ App = {
               str += '<a class="yield">' + arr[idx].qty + '</a>KG&nbsp;@&nbsp;';
               str += '<a class="yield">' + arr[idx].sellPrice + ' Eth</a>&nbsp;&nbsp;To:&nbsp;';
               str += '<a class="yield">' + arr[idx].disEmail + '</a>&nbsp;&nbsp;';
+
               //str += '<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 1);">Accept</a>&nbsp;&nbsp;<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 2);">Reject</a>';
               switch (arr[idx].repState) {
                 case 0:
-                  str += '<label>Delivery Date:</label><input type="date"/><a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 1);">Accept</a>&nbsp;&nbsp;<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 2);">Reject</a>';
+                  str += '<div style="300px;"><table border="0"><tr>';
+                  str += '<td width="60">Delivery Date:</td>';
+                  str += '<td width="80"><select class="form-control prof_right_input">';
+                  str += '<option selected>Date</option>';
+                  for (let dt = 1; dt < 32; dt++) {
+                    str += '<option>' + dt + '</option>';
+                  }
+                  str += '</select></td>';
+                  str += '<td width="80"><select class="form-control prof_right_input">';
+                  str += '<option selected>Month</option>';
+                  for (let mt = 1; mt < 13; mt++) {
+                    str += '<option>' + mt + '</option>';
+                  }
+                  str += '</select></td>';
+                  str += '<td width="80"><select class="form-control prof_right_input">';
+                  str += '<option selected>Year</option>';
+                  for (let yr = 2018; yr > 1918; yr--) {
+                    str += '<option>' + yr + '</option>';
+                  }
+                  str += '</select></td>';
+                  str += '</tr></table></div>';
+                  str += '<input type="date"/><a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 1);">Accept</a>&nbsp;&nbsp;<a class="button_normal" onclick="App.UpdateOrderState(' + arr[idx].index + ', 1, 2);">Reject</a>';
                   break;
                 case 1:
                   str += '<a class="yield" style="color:green;font-style: italic;">Current Status: Accepted</a>&nbsp;&nbsp;';
@@ -1199,10 +1223,12 @@ App = {
               //str += '<a onclick="App.LoadProducerDetailPage(' + parseInt(App.productListArray.length - 1) + ');" class="yield">' + quantity[1].toNumber() + '</a>&nbsp;&nbsp;';
               //str += '</div>'
               $('#produce_order_list').append(str);
+              //$( "#datepicker" ).datepicker();
 
             }
 
-          })(each, App.orderListArray)
+          })(each, App.orderListArray);
+
         }
 
       }, 5000);

@@ -41,3 +41,11 @@
     height: 100%; 
     overflow-x: auto;
 }
+
+.alert {
+    margin-top: 40px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    padding-top:45px; padding-bottom: 15px;
+}
